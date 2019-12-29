@@ -12,7 +12,7 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'nzbhydra'
+        pgrole: 'nzbhydra-german'
         intport: '5076'
         extport: '5075'
         image: 'linuxserver/hydra2'
