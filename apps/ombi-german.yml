@@ -13,7 +13,7 @@
 
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'ombi'
+        pgrole: 'ombi-german'
         intport: '3579'
         extport: '3578'
         image: 'linuxserver/ombi'
