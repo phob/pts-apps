@@ -13,17 +13,30 @@
 
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'sonarr-german'
-        intport: '8989'
-        extport: '8989'
-        image: 'linuxserver/sonarr:preview'
+        pgrole: 'ombi'
+        intport: '3579'
+        extport: '3579'
+        image: 'linuxserver/ombi'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
       include_tasks: '/opt/coreapps/apps/_core.yml'
 
-    - name: 'Including plugins'
-      include_tasks: '/opt/mycontainers/apps/_plugins.yml'
+    # PRETASKS ####################################################################
+    - name: Check JSON exists
+      stat:
+        path: '/opt/appdata/{{pgrole}}/appsettings.json'
+      register: jsonfile
+
+    - name: 'Download {{pgrole}} appsettings.json config file'
+      get_url:
+        url: https://raw.githubusercontent.com/tidusjar/Ombi/master/src/Ombi/appsettings.json
+        dest: /opt/appdata/{{pgrole}}/appsettings.json
+        owner: '1000'
+        group: '1000'
+        force: no
+      ignore_errors: True
+      when: jsonfile.stat.exists == False
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
@@ -46,10 +59,9 @@
     - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
-          - '{{path.stdout}}:{{path.stdout}}'
           - '/opt/appdata/{{pgrole}}:/config'
-          - '/opt/appdata/{{pgrole}}/mp4_automator:/config_mp4_automator'
-          
+          - '/opt/appdata/{{pgrole}}/appsettings.json:/opt/{{pgrole}}/appsettings.json'
+
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
@@ -57,6 +69,7 @@
           PGID: '1000'
 
     # MAIN DEPLOYMENT #############################################################
+
     - name: 'Deploying {{pgrole}}'
       docker_container:
         name: '{{pgrole}}'
@@ -73,6 +86,22 @@
               - '{{pgrole}}'
         state: started
         labels: '{{pg_labels}}'
+
+##PG-Core
+
+##PG-Core
+
+##PG-Core
+
+##PG-Core
+
+##PG-Core
+
+##PG-Core
+
+##PG-Core
+
+##PG-Core
 
 ##PG-Core
 
